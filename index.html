@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>кт 5</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+    <div class="container mt-5">
+        <div class="row text-light">
+            <div class="col-md-6">
+                <form id="cardForm">
+                    <div class="form-group">
+                        <label for="bankName">Название банка:</label>
+                        <select class="form-control" id="bankName" required>
+                            <option value="" disabled selected>Выбрать</option>
+                            <option value="https://img.icons8.com/?size=100&id=115391&format=png&color=000000">СберБанк</option>
+                            <option value="https://img.icons8.com/?size=100&id=mTYp2rELH4P2&format=png&color=000000">Озон банк</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardNumber">Номер карты:</label>
+                        <input type="text" class="form-control" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardHolder">Имя держателя карты:</label>
+                        <input type="text" class="form-control" id="cardHolder" placeholder="IVAN IVANOV" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="expiryMonth">Месяц :</label>
+                            <input type="number" class="form-control" id="expiryMonth" placeholder="12" required>
+                            <label for="expiryYear">Год :</label>
+                            <input type="number" class="form-control" id="expiryYear" placeholder="24" required>
+                        </div>
+                    
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="paymentSystem">Тип платежной системы:</label>
+                        <select class="form-control" id="paymentSystem" required>
+                            <option value="" disabled selected>Выбрать</option>
+                            <option value="https://img.icons8.com/?size=100&id=13608&format=png&color=000000">Visa</option>
+                            <option value="https://img.icons8.com/?size=100&id=13610&format=png&color=000000">MasterCard</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Добавить </button>
+                </form>
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="card">
+                    <div class="card-body ">
+                        <img id="bankLogo" src="" alt="Bank Logo">
+                        <h1 class="card-subtitle mb-2 mt-2" id="previewCardNumber"></h1>
+                        <div class="d-flex d-inline-flex mt-4">
+                            <h3 class="card-text mr-5" id="previewCardHolder"></h3>
+                            <h3 class="card-text mr-5" id="previewExpiryDate"></h3>
+                            <img id="paymentSystemLogo" src="" alt="Payment System Logo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-striped mt-5 text-light text-center align-middle" id="cardData">
+            <thead>
+                <tr>
+                    <td>Название банка</td>
+                    <td>Тип латежной системы</td>
+                    <td>Номер карты</td>
+                    <td>Имя держателя карты</td>
+                    <td>Месяц и год окончания карты</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        "use strict";
+document.getElementById("cardForm").addEventListener("input", function(event) {
+    const cardNumber = document.getElementById("cardNumber").value;
+    const cardHolder = document.getElementById("cardHolder").value;
+    const expiryMonth = document.getElementById("expiryMonth").value;
+    const expiryYear = document.getElementById("expiryYear").value;
+
+    document.getElementById("previewCardNumber").textContent = cardNumber.replace(/\d{4}(?=.)/g, "$& ");
+    document.getElementById("previewCardHolder").textContent = cardHolder;
+    document.getElementById("previewExpiryDate").textContent = `${expiryMonth}/${expiryYear}`;
+});
+document.getElementById("cardNumber").addEventListener("input", function(event) {
+    let input = event.target.value;
+    let numbersOnly = input.replace(/\D/g, "");
+    let cardNumber = numbersOnly.substring(0, 16);
+    let formattedNumber = cardNumber.match(/.{1,4}/g);
+    if (formattedNumber) {
+        formattedNumber = formattedNumber.join(" ");
+    }
+    event.target.value = formattedNumber;
+});
+document.getElementById("bankName").addEventListener("change", function() {
+    document.getElementById("bankLogo").src = this.value;
+});
+document.getElementById("paymentSystem").addEventListener("change", function() {
+    document.getElementById("paymentSystemLogo").src = this.value;
+});
+document.getElementById("cardForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const bankLogo = document.getElementById("bankLogo").src;
+    const paymentSystemLogo = document.getElementById("paymentSystemLogo").src;
+    const cardNumber = document.getElementById("cardNumber").value;
+    const cardHolder = document.getElementById("cardHolder").value;
+    const expiryMonth = document.getElementById("expiryMonth").value;
+    const expiryYear = document.getElementById("expiryYear").value;
+    const row = `<tr>
+        <td class="align-middle"><img src="${bankLogo}" id="bankLogo"></td>
+        <td class="align-middle"><img src="${paymentSystemLogo}" id="paymentSystemLogo"></td>
+        <td class="align-middle">${cardNumber}</td>
+        <td class="align-middle">${cardHolder}</td>
+        <td class="align-middle">${expiryMonth}/${expiryYear}</td>
+    </tr>`;
+    document.getElementById("cardData").innerHTML += row;
+    document.getElementById("cardForm").reset();
+    document.getElementById("bankLogo").src = "";
+    document.getElementById("previewCardNumber").textContent = "";
+    document.getElementById("previewCardHolder").textContent = "";
+    document.getElementById("previewExpiryDate").textContent = "";
+    document.getElementById("paymentSystemLogo").src = "";
+});
+    </script>
+    <style>body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 50px;
+        background-color: #98a2c1;
+        color: #e6dfdf;
+        font-family: "Roboto", sans-serif;
+      }
+    table {
+      width: 1000px;
+      border-top: 7px solid rgb(43, 129, 17);
+      border-collapse: collapse;
+      text-align: center;
+      margin-bottom: 20px;
+      border: 1px solid #dddddd;
+    }
+    td {
+      text-align: left;
+        padding: 10px;
+        border: 3px solid rgb(43, 129, 17);
+    }     
+    .card-body {
+        position: relative; 
+   left: 650px;/* This will move the bank logo to the right */
+   top:-120px;
+}
+     </style>
+</body>
+</html>
